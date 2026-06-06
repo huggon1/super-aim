@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/fps_player.gd" id="1_player"]
+[ext_resource type="Script" path="res://scripts/player/input_settings.gd" id="2_input"]
+[ext_resource type="Script" path="res://scripts/player/weapon_raycast.gd" id="3_weapon"]
+
+[sub_resource type="Resource" id="Resource_input"]
+script = ExtResource("2_input")
+mouse_sensitivity = 0.0025
+move_speed = 6.0
+fov = 90.0
+max_pitch_degrees = 89.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_player"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial_crosshair"]
+albedo_color = Color(0, 1, 0.55, 1)
+
+[node name="FPSPlayer" type="CharacterBody3D"]
+script = ExtResource("1_player")
+input_settings = SubResource("Resource_input")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape_player")
+
+[node name="Head" type="Node3D" parent="."]
+position = Vector3(0, 1.65, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+current = true
+fov = 90.0
+
+[node name="WeaponRaycast" type="Node" parent="."]
+script = ExtResource("3_weapon")
+camera_path = NodePath("../Head/Camera3D")
+max_distance = 1000.0

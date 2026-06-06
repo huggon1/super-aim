@@ -1,0 +1,24 @@
+# Godot editor/cache data
+.godot/
+.import/
+*.tmp
+
+# Godot export credentials can contain secrets.
+.godot/export_credentials.cfg
+
+# Local and generated exports
+/build/
+/dist/
+/exports/
+/release/
+/releases/
+/android/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Local runtime/settings files
+*.log
