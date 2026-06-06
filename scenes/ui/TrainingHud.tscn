@@ -1,0 +1,131 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/training_hud.gd" id="1_hud"]
+
+[node name="TrainingHud" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_hud")
+
+[node name="TopTimer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 96.0
+grow_horizontal = 2
+theme_override_constants/margin_top = 18
+
+[node name="TimeLabel" type="Label" parent="TopTimer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "60"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatsPanel" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -280.0
+offset_bottom = 140.0
+grow_horizontal = 0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="StatsPanel"]
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="StatsPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Score: 0"
+
+[node name="HitsLabel" type="Label" parent="StatsPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Hits: 0"
+
+[node name="ShotsLabel" type="Label" parent="StatsPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Shots: 0"
+
+[node name="AccuracyLabel" type="Label" parent="StatsPanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Accuracy: 0.0%"
+
+[node name="Crosshair" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+mouse_filter = 2
+color = Color(0, 1, 0.55, 1)
+
+[node name="PauseOverlay" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseOverlay"]
+layout_mode = 2
+
+[node name="MenuPanel" type="PanelContainer" parent="PauseOverlay/CenterContainer"]
+custom_minimum_size = Vector2(360, 260)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PauseOverlay/CenterContainer/MenuPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 28
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseOverlay/CenterContainer/MenuPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="PauseOverlay/CenterContainer/MenuPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Paused"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PauseOverlay/CenterContainer/MenuPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Continue"
+
+[node name="RestartButton" type="Button" parent="PauseOverlay/CenterContainer/MenuPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Restart"
+
+[node name="MenuButton" type="Button" parent="PauseOverlay/CenterContainer/MenuPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Main Menu"

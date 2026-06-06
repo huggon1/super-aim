@@ -1,0 +1,86 @@
+name: Release Windows
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+env:
+  GODOT_VERSION: 4.6.3
+  GODOT_STATUS: stable
+  EXPORT_PRESET: Windows Desktop
+  EXPORT_DIR: build/windows
+  EXPORT_EXE: super-aim.exe
+
+jobs:
+  build-windows:
+    name: Build portable Windows exe
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y unzip zip
+
+      - name: Download Godot editor and export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT_TAG="${GODOT_VERSION}-${GODOT_STATUS}"
+          GODOT_BASE="https://github.com/godotengine/godot/releases/download/${GODOT_TAG}"
+
+          curl -L -o godot.zip "${GODOT_BASE}/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64.zip"
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64
+          sudo mv godot-bin/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64 /usr/local/bin/godot
+
+          curl -L -o export_templates.tpz "${GODOT_BASE}/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_export_templates.tpz"
+          mkdir -p "${HOME}/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_STATUS}"
+          unzip -q export_templates.tpz -d export-templates
+          cp export-templates/templates/* "${HOME}/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_STATUS}/"
+
+      - name: Import project
+        run: godot --headless --path . --import
+
+      - name: Export Windows release
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${EXPORT_DIR}"
+          godot --headless --path . --export-release "${EXPORT_PRESET}" "${EXPORT_DIR}/${EXPORT_EXE}"
+          test -f "${EXPORT_DIR}/${EXPORT_EXE}"
+
+      - name: Package portable zip
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp "${EXPORT_DIR}/${EXPORT_EXE}" "dist/${EXPORT_EXE}"
+          (cd dist && zip -9 "super-aim-windows-portable.zip" "${EXPORT_EXE}")
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: super-aim-windows-portable
+          path: |
+            dist/${{ env.EXPORT_EXE }}
+            dist/super-aim-windows-portable.zip
+
+      - name: Create GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="build-${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
+          TITLE="Super Aim ${TAG}"
+          gh release create "${TAG}" \
+            "dist/${EXPORT_EXE}" \
+            "dist/super-aim-windows-portable.zip" \
+            --title "${TITLE}" \
+            --notes "Automated Windows portable build for commit ${GITHUB_SHA}."

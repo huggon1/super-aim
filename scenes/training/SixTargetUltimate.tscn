@@ -1,0 +1,56 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/training/six_target_ultimate.gd" id="1_training"]
+[ext_resource type="PackedScene" path="res://scenes/player/FPSPlayer.tscn" id="2_player"]
+[ext_resource type="Script" path="res://scripts/training/target_spawner.gd" id="3_spawner"]
+[ext_resource type="PackedScene" path="res://scenes/ui/TrainingHud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/targets/Target.tscn" id="5_target"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+size = Vector2(28, 28)
+
+[sub_resource type="BoxShape3D" id="BoxShape_floor"]
+size = Vector3(28, 0.1, 28)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial_floor"]
+albedo_color = Color(0.12, 0.13, 0.14, 1)
+
+[sub_resource type="Environment" id="Environment_training"]
+background_mode = 1
+background_color = Color(0.04, 0.05, 0.06, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.55, 0.58, 0.62, 1)
+ambient_light_energy = 0.8
+
+[node name="SixTargetUltimate" type="Node3D"]
+script = ExtResource("1_training")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_training")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.785398, -0.523599, 0)
+light_energy = 2.0
+
+[node name="Floor" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("PlaneMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+position = Vector3(0, -0.05, 0)
+shape = SubResource("BoxShape_floor")
+
+[node name="FPSPlayer" parent="." instance=ExtResource("2_player")]
+position = Vector3(0, 0, 2.5)
+
+[node name="TargetSpawner" type="Node3D" parent="."]
+script = ExtResource("3_spawner")
+target_scene = ExtResource("5_target")
+
+[node name="HudLayer" type="CanvasLayer" parent="."]
+
+[node name="TrainingHud" parent="HudLayer" instance=ExtResource("4_hud")]
