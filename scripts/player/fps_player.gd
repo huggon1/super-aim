@@ -9,6 +9,7 @@ signal combat_hit(target: Node, hit_position: Vector3, damage: float, is_critica
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
 @onready var weapon: WeaponRaycast = $WeaponRaycast
+@onready var view_model: Node = $Head/Camera3D/FirstPersonViewModel
 
 var _pitch := 0.0
 var _is_trigger_held := false
@@ -24,6 +25,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	weapon.fired.connect(_on_weapon_fired)
 	weapon.combat_hit.connect(_on_weapon_combat_hit)
+	weapon.shot_resolved.connect(_on_weapon_shot_resolved)
 
 
 func _physics_process(delta: float) -> void:
@@ -65,6 +67,10 @@ func _on_weapon_fired(was_hit: bool, target: AimTarget) -> void:
 
 func _on_weapon_combat_hit(target: Node, hit_position: Vector3, damage: float, is_critical: bool) -> void:
 	combat_hit.emit(target, hit_position, damage, is_critical)
+
+
+func _on_weapon_shot_resolved(origin: Vector3, end: Vector3, was_hit: bool, is_critical: bool) -> void:
+	view_model.play_fire_feedback(origin, end, was_hit, is_critical)
 
 
 func apply_input_settings(settings: InputSettings) -> void:

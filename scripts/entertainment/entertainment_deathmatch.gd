@@ -29,6 +29,7 @@ func _ready() -> void:
 		player.apply_input_settings(input_settings)
 
 	player.fired.connect(_on_player_fired)
+	player.combat_hit.connect(_on_player_combat_hit)
 	player_health.died.connect(_on_player_died)
 	hud.resume_requested.connect(resume_match)
 	hud.restart_requested.connect(_request_restart)
@@ -100,6 +101,12 @@ func _on_player_fired(was_hit: bool, _target: AimTarget) -> void:
 	score.record_shot(was_hit)
 
 
+func _on_player_combat_hit(_target: Node, _hit_position: Vector3, _damage: float, is_critical: bool) -> void:
+	if _is_paused or _is_finished:
+		return
+	hud.show_hit_feedback(is_critical)
+
+
 func _on_player_died(_source: Node) -> void:
 	if _is_finished:
 		return
@@ -116,6 +123,7 @@ func _on_player_died(_source: Node) -> void:
 func _on_bot_killed(bot: DeathmatchBot, source: Node) -> void:
 	if source == player:
 		score.record_kill()
+		hud.show_kill_feedback(false)
 
 	await get_tree().create_timer(RESPAWN_DELAY_SECONDS).timeout
 	if not _is_finished:

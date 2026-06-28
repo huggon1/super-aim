@@ -3,6 +3,7 @@ extends Node
 
 signal fired(was_hit: bool, target: AimTarget)
 signal combat_hit(target: Node, hit_position: Vector3, damage: float, is_critical: bool)
+signal shot_resolved(origin: Vector3, end: Vector3, was_hit: bool, is_critical: bool)
 
 @export var camera_path: NodePath
 @export var max_distance := 1000.0
@@ -38,16 +39,19 @@ func fire(source: Node = null, spread_multiplier := 1.0) -> bool:
 	var collider = result.get("collider")
 	var target := _extract_target(collider)
 	var was_hit := target != null
+	var hit_position: Vector3 = result.get("position", end)
+	var is_critical := false
 
 	if was_hit:
 		target.handle_hit()
 	elif collider is Node and collider.has_method("handle_damage"):
-		var is_critical: bool = collider is DamageHitbox and collider.is_critical
+		is_critical = collider is DamageHitbox and collider.is_critical
 		var applied_damage := critical_damage if is_critical else damage
 		collider.handle_damage(applied_damage, source)
 		was_hit = true
-		combat_hit.emit(collider, result.get("position", end), applied_damage, is_critical)
+		combat_hit.emit(collider, hit_position, applied_damage, is_critical)
 
+	shot_resolved.emit(origin, hit_position, was_hit, is_critical)
 	fired.emit(was_hit, target)
 	return true
 

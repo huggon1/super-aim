@@ -8,21 +8,31 @@ signal killed(bot: DeathmatchBot, source: Node)
 @export var fire_interval := 0.38
 @export var damage := 18.0
 @export var aim_spread_degrees := 1.25
+@export var reaction_time := 0.28
+@export_range(0.0, 1.0) var accuracy := 0.58
 
 @onready var health: HealthComponent = $HealthComponent
-@onready var body_mesh: MeshInstance3D = $BodyMesh
-@onready var head_mesh: MeshInstance3D = $HeadMesh
+@onready var model_root: Node3D = $ModelRoot
+@onready var muzzle_flash: Sprite3D = $ModelRoot/MuzzleFlash
+@onready var shoot_audio: AudioStreamPlayer3D = $ShootAudio
+@onready var hurt_audio: AudioStreamPlayer3D = $HurtAudio
+@onready var destroy_audio: AudioStreamPlayer3D = $DestroyAudio
 
 var target: Node3D
 var patrol_points: Array[Vector3] = []
 var _patrol_index := 0
 var _fire_cooldown := 0.0
 var _spawn_position := Vector3.ZERO
+var _seen_timer := 0.0
+var _last_seen_position := Vector3.ZERO
+var _state := "idle"
 
 
 func _ready() -> void:
 	_spawn_position = global_position
 	health.died.connect(_on_died)
+	health.damaged.connect(_on_damaged)
+	muzzle_flash.visible = false
 
 
 func _physics_process(delta: float) -> void:
@@ -32,10 +42,19 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if target != null and _can_see_target():
+		_seen_timer += delta
+		_last_seen_position = _get_target_position()
 		_face_target()
+		_set_state("aim")
 		velocity = _get_strafe_velocity(delta)
 		move_and_slide()
-		_try_fire()
+		if _seen_timer >= reaction_time:
+			_try_fire()
+		return
+
+	_seen_timer = 0.0
+	if _last_seen_position != Vector3.ZERO and global_position.distance_to(_last_seen_position) > 1.2:
+		_move_to_last_seen()
 		return
 
 	_patrol(delta)
@@ -45,8 +64,13 @@ func respawn(at_position: Vector3) -> void:
 	global_position = at_position
 	_spawn_position = at_position
 	visible = true
+	model_root.scale = Vector3.ONE
+	model_root.rotation_degrees = Vector3.ZERO
 	set_physics_process(true)
 	health.reset()
+	_seen_timer = 0.0
+	_last_seen_position = Vector3.ZERO
+	_set_state("idle")
 
 
 func handle_damage(amount: float, source: Node = null) -> void:
@@ -56,6 +80,7 @@ func handle_damage(amount: float, source: Node = null) -> void:
 func _patrol(_delta: float) -> void:
 	if patrol_points.is_empty():
 		velocity = Vector3.ZERO
+		_set_state("idle")
 		return
 
 	var destination := patrol_points[_patrol_index]
@@ -67,6 +92,21 @@ func _patrol(_delta: float) -> void:
 
 	velocity = to_destination.normalized() * move_speed
 	look_at(global_position + velocity, Vector3.UP)
+	_set_state("run")
+	move_and_slide()
+
+
+func _move_to_last_seen() -> void:
+	var to_destination := _last_seen_position - global_position
+	to_destination.y = 0.0
+	if to_destination.length() < 1.2:
+		_last_seen_position = Vector3.ZERO
+		_set_state("idle")
+		return
+
+	velocity = to_destination.normalized() * move_speed * 1.08
+	look_at(global_position + velocity, Vector3.UP)
+	_set_state("run")
 	move_and_slide()
 
 
@@ -121,12 +161,13 @@ func _try_fire() -> void:
 	query.exclude = _collect_own_rids()
 	var result := get_world_3d().direct_space_state.intersect_ray(query)
 	var collider = result.get("collider")
+	_play_shoot_feedback()
 	if collider is Node and collider.has_method("handle_damage"):
 		collider.handle_damage(damage, self)
 
 
 func _apply_aim_spread(direction: Vector3) -> Vector3:
-	var spread := deg_to_rad(aim_spread_degrees)
+	var spread := deg_to_rad(aim_spread_degrees * lerpf(1.8, 0.45, accuracy))
 	var x := randf_range(-spread, spread)
 	var y := randf_range(-spread, spread)
 	var right := direction.cross(Vector3.UP).normalized()
@@ -153,7 +194,43 @@ func _collect_own_rids() -> Array[RID]:
 	return rids
 
 
+func _set_state(next_state: String) -> void:
+	if _state == next_state:
+		return
+
+	_state = next_state
+	if _state == "idle":
+		model_root.rotation_degrees = Vector3.ZERO
+	elif _state == "run":
+		model_root.rotation_degrees.z = 5.0
+	elif _state == "aim":
+		model_root.rotation_degrees.x = -4.0
+
+
+func _play_shoot_feedback() -> void:
+	_set_state("shoot")
+	muzzle_flash.visible = true
+	muzzle_flash.modulate.a = 1.0
+	muzzle_flash.rotation_degrees.z = randf_range(-30.0, 30.0)
+	shoot_audio.play()
+
+	var tween := create_tween()
+	tween.tween_property(muzzle_flash, "modulate:a", 0.0, 0.06)
+	tween.tween_callback(func() -> void: muzzle_flash.visible = false)
+	tween.parallel().tween_property(model_root, "rotation_degrees:x", -8.0, 0.03)
+	tween.tween_property(model_root, "rotation_degrees:x", -4.0, 0.08)
+
+
+func _on_damaged(_amount: float, _source: Node) -> void:
+	hurt_audio.play()
+
+
 func _on_died(source: Node) -> void:
-	visible = false
+	_set_state("death")
+	destroy_audio.play()
 	set_physics_process(false)
+	var tween := create_tween()
+	tween.tween_property(model_root, "rotation_degrees:z", 90.0, 0.18)
+	tween.parallel().tween_property(model_root, "scale", Vector3.ONE * 0.35, 0.18)
+	tween.tween_callback(func() -> void: visible = false)
 	killed.emit(self, source)

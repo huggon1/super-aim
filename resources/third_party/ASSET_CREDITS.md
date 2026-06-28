@@ -1,6 +1,32 @@
 # Asset Credits
 
-This build uses Godot primitive meshes and project-authored materials for the first playable deathmatch arena, bot silhouettes, and rifle placeholders. No Valorant art, maps, audio, names, or extracted assets are included.
+This build uses project-authored gameplay code plus imported CC0 game assets for the first-person weapon, bot visuals, weapon effects, impact effects, sounds, and arena dressing. No Valorant art, maps, audio, names, or extracted assets are included.
+
+## Imported Assets
+
+### Kenney Starter Kit FPS
+
+- Source: https://github.com/KenneyNL/Starter-Kit-FPS
+- Download date: 2026-06-28
+- Code license in source package: MIT
+- Asset license stated in README: 2D sprites, 3D models, and sound effects are CC0 licensed.
+- License URL: https://creativecommons.org/publicdomain/zero/1.0/
+- Imported files:
+  - `models/blaster.glb`
+  - `models/blaster-repeater.glb`
+  - `models/enemy-flying.glb`
+  - `models/platform.glb`
+  - `models/platform-large-grass.glb`
+  - `models/wall-high.glb`
+  - `models/wall-low.glb`
+  - `models/Textures/colormap.png`
+  - `sprites/burst.png`
+  - `sprites/hit.png`
+  - `sprites/crosshair-repeater.png`
+  - `sounds/blaster_repeater.ogg`
+  - `sounds/enemy_attack.ogg`
+  - `sounds/enemy_destroy.ogg`
+  - `sounds/enemy_hurt.ogg`
 
 Approved CC0 replacement sources for later mesh/audio swaps:
 
