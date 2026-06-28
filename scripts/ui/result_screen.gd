@@ -8,6 +8,8 @@ signal menu_requested
 @onready var hits_label: Label = %HitsLabel
 @onready var shots_label: Label = %ShotsLabel
 @onready var accuracy_label: Label = %AccuracyLabel
+@onready var kills_label: Label = %KillsLabel
+@onready var deaths_label: Label = %DeathsLabel
 @onready var restart_button: Button = %RestartButton
 @onready var menu_button: Button = %MenuButton
 
@@ -22,3 +24,7 @@ func set_results(results: Dictionary) -> void:
 	hits_label.text = "Hits: %d" % results.get("hits", 0)
 	shots_label.text = "Shots: %d" % results.get("shots", 0)
 	accuracy_label.text = "Accuracy: %.1f%%" % results.get("accuracy_percent", 0.0)
+	kills_label.visible = results.has("kills")
+	deaths_label.visible = results.has("deaths")
+	kills_label.text = "Kills: %d" % results.get("kills", 0)
+	deaths_label.text = "Deaths: %d" % results.get("deaths", 0)

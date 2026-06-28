@@ -1,6 +1,11 @@
 # Super Aim
 
-Super Aim is a Godot 4.6 desktop aim trainer prototype. The first training mode is Six Target Ultimate: six active targets, a timed session, scoring, pause/restart flow, mouse sensitivity, and FOV settings.
+Super Aim is a Godot 4.6 desktop aim trainer prototype. It includes practice and entertainment modes that share mouse sensitivity and FOV settings.
+
+## Modes
+
+- Practice: Six Target Ultimate, with six active targets, a timed session, scoring, pause/restart flow, mouse sensitivity, and FOV settings.
+- Entertainment: Sci-Fi Survival, a local horde arena with rifle handling, melee infected, respawns, and timed scoring.
 
 ## Requirements
 
