@@ -86,6 +86,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ArenaWalls/NorthWall"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_wall")
 
@@ -99,6 +100,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ArenaWalls/SouthWall"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_wall")
 
@@ -112,6 +114,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ArenaWalls/WestWall"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_wall")
 
@@ -125,6 +128,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ArenaWalls/EastWall"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_wall")
 
@@ -140,6 +144,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/MidLeft"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_cover")
 
@@ -153,6 +158,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/MidRight"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_cover")
 
@@ -166,6 +172,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/BackLeft"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_wall")
 
@@ -179,6 +186,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/BackRight"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_wall")
 
@@ -192,6 +200,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/LeftLaneBlockA"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_cover")
 
@@ -205,6 +214,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/LeftLaneBlockB"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_cover")
 
@@ -218,6 +228,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/RightLaneBlockA"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_cover")
 
@@ -231,6 +242,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/RightLaneBlockB"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_cover")
 
@@ -244,6 +256,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/CenterRailNorth"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_wall")
 
@@ -257,6 +270,7 @@ collision_layer = 1
 collision_mask = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cover/CenterRailSouth"]
+visible = false
 mesh = SubResource("BoxMesh_unit")
 surface_material_override/0 = SubResource("StandardMaterial_wall")
 
@@ -340,6 +354,96 @@ scale = Vector3(0.9, 0.9, 0.9)
 [node name="RaisedRightVisual" parent="ArenaDressing" instance=ExtResource("8_platform_large")]
 position = Vector3(10.5, 1.0, -8.5)
 scale = Vector3(0.9, 0.9, 0.9)
+
+[node name="NorthWallVisualA" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(-12, 0, -16.4)
+rotation = Vector3(0, 1.5708, 0)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="NorthWallVisualB" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(0, 0, -16.4)
+rotation = Vector3(0, 1.5708, 0)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="NorthWallVisualC" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(12, 0, -16.4)
+rotation = Vector3(0, 1.5708, 0)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="SouthWallVisualA" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(-12, 0, 16.4)
+rotation = Vector3(0, 1.5708, 0)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="SouthWallVisualB" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(0, 0, 16.4)
+rotation = Vector3(0, 1.5708, 0)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="SouthWallVisualC" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(12, 0, 16.4)
+rotation = Vector3(0, 1.5708, 0)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="WestWallVisualA" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(-16.4, 0, -12)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="WestWallVisualB" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(-16.4, 0, 0)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="WestWallVisualC" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(-16.4, 0, 12)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="EastWallVisualA" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(16.4, 0, -12)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="EastWallVisualB" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(16.4, 0, 0)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="EastWallVisualC" parent="ArenaDressing" instance=ExtResource("5_wall_high")]
+position = Vector3(16.4, 0, 12)
+scale = Vector3(1.6, 1.25, 1.6)
+
+[node name="CenterRailNorthVisualA" parent="ArenaDressing" instance=ExtResource("6_wall_low")]
+position = Vector3(-3.2, 0, -5.8)
+rotation = Vector3(0, 1.5708, 0)
+scale = Vector3(1.3, 1.0, 1.3)
+
+[node name="CenterRailNorthVisualB" parent="ArenaDressing" instance=ExtResource("6_wall_low")]
+position = Vector3(3.2, 0, -5.8)
+rotation = Vector3(0, 1.5708, 0)
+scale = Vector3(1.3, 1.0, 1.3)
+
+[node name="CenterRailSouthVisualA" parent="ArenaDressing" instance=ExtResource("6_wall_low")]
+position = Vector3(-3.2, 0, 5.8)
+rotation = Vector3(0, 1.5708, 0)
+scale = Vector3(1.3, 1.0, 1.3)
+
+[node name="CenterRailSouthVisualB" parent="ArenaDressing" instance=ExtResource("6_wall_low")]
+position = Vector3(3.2, 0, 5.8)
+rotation = Vector3(0, 1.5708, 0)
+scale = Vector3(1.3, 1.0, 1.3)
+
+[node name="SideRouteDeckLeftA" parent="ArenaDressing" instance=ExtResource("7_platform")]
+position = Vector3(-12.5, 0.05, -9)
+scale = Vector3(1.1, 0.9, 1.1)
+
+[node name="SideRouteDeckLeftB" parent="ArenaDressing" instance=ExtResource("7_platform")]
+position = Vector3(-12.5, 0.05, 9)
+scale = Vector3(1.1, 0.9, 1.1)
+
+[node name="SideRouteDeckRightA" parent="ArenaDressing" instance=ExtResource("7_platform")]
+position = Vector3(12.5, 0.05, -9)
+scale = Vector3(1.1, 0.9, 1.1)
+
+[node name="SideRouteDeckRightB" parent="ArenaDressing" instance=ExtResource("7_platform")]
+position = Vector3(12.5, 0.05, 9)
+scale = Vector3(1.1, 0.9, 1.1)
 
 [node name="FPSPlayer" parent="." instance=ExtResource("2_player")]
 position = Vector3(0, 0, 12)
