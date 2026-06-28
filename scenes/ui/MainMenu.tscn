@@ -59,7 +59,7 @@ horizontal_alignment = 1
 [node name="StartDeathmatchButton" type="Button" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Sci-Fi Deathmatch"
+text = "Sci-Fi Survival"
 
 [node name="SettingsLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2

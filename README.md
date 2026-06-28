@@ -5,7 +5,7 @@ Super Aim is a Godot 4.6 desktop aim trainer prototype. It includes practice and
 ## Modes
 
 - Practice: Six Target Ultimate, with six active targets, a timed session, scoring, pause/restart flow, mouse sensitivity, and FOV settings.
-- Entertainment: Sci-Fi Deathmatch, a local fake-multiplayer arena with rifle handling, combat bots, respawns, and timed scoring.
+- Entertainment: Sci-Fi Survival, a local horde arena with rifle handling, melee infected, respawns, and timed scoring.
 
 ## Requirements
 

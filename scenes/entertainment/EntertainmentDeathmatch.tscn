@@ -11,10 +11,10 @@
 
 [sub_resource type="Environment" id="Environment_arena"]
 background_mode = 1
-background_color = Color(0.025, 0.03, 0.04, 1)
+background_color = Color(0.18, 0.22, 0.27, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.52, 0.62, 0.72, 1)
-ambient_light_energy = 0.9
+ambient_light_color = Color(0.72, 0.82, 0.92, 1)
+ambient_light_energy = 1.35
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
 size = Vector2(34, 34)
@@ -29,13 +29,13 @@ size = Vector3(1, 1, 1)
 size = Vector3(1, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial_floor"]
-albedo_color = Color(0.10, 0.12, 0.14, 1)
+albedo_color = Color(0.16, 0.18, 0.2, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial_wall"]
-albedo_color = Color(0.22, 0.27, 0.32, 1)
+albedo_color = Color(0.34, 0.4, 0.46, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial_cover"]
-albedo_color = Color(0.12, 0.46, 0.56, 1)
+albedo_color = Color(0.04, 0.52, 0.64, 1)
 
 [node name="EntertainmentDeathmatch" type="Node3D"]
 script = ExtResource("1_mode")
@@ -45,7 +45,25 @@ environment = SubResource("Environment_arena")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 rotation = Vector3(-0.9, -0.55, 0)
-light_energy = 2.2
+light_energy = 3.2
+
+[node name="CenterLight" type="OmniLight3D" parent="."]
+position = Vector3(0, 5.5, 0)
+light_color = Color(0.65, 0.9, 1, 1)
+light_energy = 2.4
+omni_range = 18.0
+
+[node name="NorthSpawnLight" type="OmniLight3D" parent="."]
+position = Vector3(0, 3.4, -12)
+light_color = Color(1, 0.72, 0.48, 1)
+light_energy = 1.2
+omni_range = 8.0
+
+[node name="SouthSpawnLight" type="OmniLight3D" parent="."]
+position = Vector3(0, 3.4, 12)
+light_color = Color(1, 0.72, 0.48, 1)
+light_energy = 1.2
+omni_range = 8.0
 
 [node name="Floor" type="StaticBody3D" parent="."]
 collision_layer = 1
@@ -245,6 +263,24 @@ surface_material_override/0 = SubResource("StandardMaterial_wall")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Cover/CenterRailSouth"]
 shape = SubResource("BoxShape_unit")
 
+[node name="RaisedLeftCollision" type="StaticBody3D" parent="Cover"]
+position = Vector3(-10.5, 1.05, 8.5)
+scale = Vector3(3.5, 0.45, 3.5)
+collision_layer = 1
+collision_mask = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cover/RaisedLeftCollision"]
+shape = SubResource("BoxShape_unit")
+
+[node name="RaisedRightCollision" type="StaticBody3D" parent="Cover"]
+position = Vector3(10.5, 1.05, -8.5)
+scale = Vector3(3.5, 0.45, 3.5)
+collision_layer = 1
+collision_mask = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cover/RaisedRightCollision"]
+shape = SubResource("BoxShape_unit")
+
 [node name="ArenaDressing" type="Node3D" parent="."]
 
 [node name="CenterPlatform" parent="ArenaDressing" instance=ExtResource("8_platform_large")]
@@ -333,6 +369,9 @@ position = Vector3(-12, 0, 0)
 [node name="SpawnC" type="Node3D" parent="PlayerSpawns"]
 position = Vector3(12, 0, 0)
 
+[node name="SpawnD" type="Node3D" parent="PlayerSpawns"]
+position = Vector3(0, 0, -12)
+
 [node name="BotSpawns" type="Node3D" parent="."]
 
 [node name="SpawnA" type="Node3D" parent="BotSpawns"]
@@ -347,6 +386,9 @@ position = Vector3(-11, 0, 5)
 [node name="SpawnD" type="Node3D" parent="BotSpawns"]
 position = Vector3(11, 0, 5)
 
+[node name="SpawnE" type="Node3D" parent="BotSpawns"]
+position = Vector3(0, 0, -12)
+
 [node name="PatrolPoints" type="Node3D" parent="."]
 
 [node name="PointA" type="Node3D" parent="PatrolPoints"]
@@ -360,6 +402,12 @@ position = Vector3(11, 0, 11)
 
 [node name="PointD" type="Node3D" parent="PatrolPoints"]
 position = Vector3(-11, 0, 11)
+
+[node name="PointE" type="Node3D" parent="PatrolPoints"]
+position = Vector3(-4, 0, 0)
+
+[node name="PointF" type="Node3D" parent="PatrolPoints"]
+position = Vector3(4, 0, 0)
 
 [node name="HudLayer" type="CanvasLayer" parent="."]
 

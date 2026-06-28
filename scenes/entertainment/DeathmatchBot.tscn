@@ -1,10 +1,9 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/entertainment/deathmatch_bot.gd" id="1_bot"]
 [ext_resource type="Script" path="res://scripts/combat/health_component.gd" id="2_health"]
 [ext_resource type="Script" path="res://scripts/combat/damage_hitbox.gd" id="3_hitbox"]
 [ext_resource type="PackedScene" path="res://resources/third_party/kenney_fps_starter/models/enemy-flying.glb" id="4_enemy"]
-[ext_resource type="PackedScene" path="res://resources/third_party/kenney_fps_starter/models/blaster.glb" id="5_blaster"]
 [ext_resource type="Texture2D" path="res://resources/third_party/kenney_fps_starter/sprites/burst.png" id="6_burst"]
 [ext_resource type="AudioStream" path="res://resources/third_party/kenney_fps_starter/sounds/enemy_attack.ogg" id="7_attack"]
 [ext_resource type="AudioStream" path="res://resources/third_party/kenney_fps_starter/sounds/enemy_hurt.ogg" id="8_hurt"]
@@ -37,19 +36,9 @@ position = Vector3(0, 1.0, 0)
 position = Vector3(0, -0.15, 0)
 scale = Vector3(1.35, 1.35, 1.35)
 
-[node name="BlasterLeft" parent="ModelRoot" instance=ExtResource("5_blaster")]
-position = Vector3(-0.42, 0.12, -0.12)
-rotation = Vector3(0, 3.14159, 0)
-scale = Vector3(0.75, 0.75, 0.75)
-
-[node name="BlasterRight" parent="ModelRoot" instance=ExtResource("5_blaster")]
-position = Vector3(0.42, 0.12, -0.12)
-rotation = Vector3(0, 3.14159, 0)
-scale = Vector3(0.75, 0.75, 0.75)
-
-[node name="MuzzleFlash" type="Sprite3D" parent="ModelRoot"]
+[node name="AttackFlash" type="Sprite3D" parent="ModelRoot"]
 visible = false
-position = Vector3(0, 0.13, -0.65)
+position = Vector3(0, 0.1, -0.72)
 texture = ExtResource("6_burst")
 modulate = Color(1, 1, 1, 0)
 billboard = 1
@@ -79,7 +68,7 @@ is_critical = true
 position = Vector3(0, 1.65, 0)
 shape = SubResource("SphereShape_head_hitbox")
 
-[node name="ShootAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("7_attack")
 volume_db = -9.0
 

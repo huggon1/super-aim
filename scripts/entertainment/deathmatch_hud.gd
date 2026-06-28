@@ -11,6 +11,8 @@ signal menu_requested
 @onready var deaths_label: Label = %DeathsLabel
 @onready var accuracy_label: Label = %AccuracyLabel
 @onready var health_label: Label = %HealthLabel
+@onready var health_bar: ProgressBar = %HealthBar
+@onready var shield_label: Label = %ShieldLabel
 @onready var feedback_label: Label = %FeedbackLabel
 @onready var hit_marker: Control = %HitMarker
 @onready var pause_overlay: Control = %PauseOverlay
@@ -27,13 +29,17 @@ func _ready() -> void:
 	hit_marker.visible = false
 
 
-func set_stats(time_left: float, score: DeathmatchScore, health: float) -> void:
+func set_stats(time_left: float, score: DeathmatchScore, health: float, max_health: float, shield_seconds: float) -> void:
 	time_label.text = "%02d" % int(ceil(time_left))
 	score_label.text = "Score: %d" % score.get_score()
 	kills_label.text = "Kills: %d" % score.kills
 	deaths_label.text = "Deaths: %d" % score.deaths
 	accuracy_label.text = "Accuracy: %.1f%%" % score.get_accuracy_percent()
 	health_label.text = "HP: %d" % int(ceil(health))
+	health_bar.max_value = max_health
+	health_bar.value = health
+	shield_label.visible = shield_seconds > 0.0
+	shield_label.text = "RESPAWN SHIELD %.1fs" % shield_seconds
 
 
 func set_paused(is_paused: bool) -> void:

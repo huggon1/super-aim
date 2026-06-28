@@ -3,6 +3,7 @@ extends Node3D
 
 @export var tracer_lifetime := 0.08
 @export var impact_lifetime := 0.18
+@export var max_visual_tracer_length := 42.0
 
 @onready var weapon_root: Node3D = $WeaponRoot
 @onready var muzzle_flash: Sprite3D = $MuzzleFlash
@@ -57,6 +58,7 @@ func _spawn_tracer(origin: Vector3, end: Vector3) -> void:
 	var tracer := MeshInstance3D.new()
 	var mesh := ImmediateMesh.new()
 	var material := StandardMaterial3D.new()
+	var visual_end := origin + (end - origin).limit_length(max_visual_tracer_length)
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.albedo_color = Color(0.2, 0.95, 1.0, 0.85)
 	material.emission_enabled = true
@@ -64,7 +66,7 @@ func _spawn_tracer(origin: Vector3, end: Vector3) -> void:
 
 	mesh.surface_begin(Mesh.PRIMITIVE_LINES, material)
 	mesh.surface_add_vertex(origin)
-	mesh.surface_add_vertex(end)
+	mesh.surface_add_vertex(visual_end)
 	mesh.surface_end()
 	tracer.mesh = mesh
 	get_tree().current_scene.add_child(tracer)
