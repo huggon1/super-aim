@@ -57,6 +57,20 @@ layout_mode = 2
 text = "Accuracy: 0.0%"
 horizontal_alignment = 1
 
+[node name="KillsLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Kills: 0"
+horizontal_alignment = 1
+
+[node name="DeathsLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Deaths: 0"
+horizontal_alignment = 1
+
 [node name="RestartButton" type="Button" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2

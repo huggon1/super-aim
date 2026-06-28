@@ -4,9 +4,11 @@ extends Control
 const APP_SETTINGS := preload("res://scripts/app/app_settings.gd")
 
 signal start_training_requested
+signal start_deathmatch_requested
 signal settings_changed(settings)
 
-@onready var start_button: Button = %StartButton
+@onready var start_training_button: Button = %StartTrainingButton
+@onready var start_deathmatch_button: Button = %StartDeathmatchButton
 @onready var sensitivity_spin_box: SpinBox = %SensitivitySpinBox
 @onready var fov_spin_box: SpinBox = %FovSpinBox
 @onready var save_settings_button: Button = %SaveSettingsButton
@@ -15,7 +17,8 @@ var _settings
 
 
 func _ready() -> void:
-	start_button.pressed.connect(_start_training)
+	start_training_button.pressed.connect(_start_training)
+	start_deathmatch_button.pressed.connect(_start_deathmatch)
 	save_settings_button.pressed.connect(_save_settings)
 
 
@@ -41,3 +44,8 @@ func _save_settings() -> void:
 func _start_training() -> void:
 	_save_settings()
 	start_training_requested.emit()
+
+
+func _start_deathmatch() -> void:
+	_save_settings()
+	start_deathmatch_requested.emit()

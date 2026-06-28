@@ -1,0 +1,84 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/entertainment/deathmatch_bot.gd" id="1_bot"]
+[ext_resource type="Script" path="res://scripts/combat/health_component.gd" id="2_health"]
+[ext_resource type="Script" path="res://scripts/combat/damage_hitbox.gd" id="3_hitbox"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_body"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+radius = 0.34
+height = 1.35
+
+[sub_resource type="SphereMesh" id="SphereMesh_head"]
+radius = 0.25
+height = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial_body"]
+albedo_color = Color(0.88, 0.2, 0.22, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial_head"]
+albedo_color = Color(1, 0.72, 0.32, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_body_hitbox"]
+radius = 0.38
+height = 1.45
+
+[sub_resource type="SphereShape3D" id="SphereShape_head_hitbox"]
+radius = 0.26
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rifle"]
+top_radius = 0.055
+bottom_radius = 0.055
+height = 0.85
+
+[node name="DeathmatchBot" type="CharacterBody3D"]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_bot")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape_body")
+
+[node name="BodyMesh" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.88, 0)
+mesh = SubResource("CapsuleMesh_body")
+surface_material_override/0 = SubResource("StandardMaterial_body")
+
+[node name="HeadMesh" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.65, 0)
+mesh = SubResource("SphereMesh_head")
+surface_material_override/0 = SubResource("StandardMaterial_head")
+
+[node name="RifleMesh" type="MeshInstance3D" parent="."]
+position = Vector3(0.27, 1.15, -0.35)
+rotation = Vector3(1.5708, 0, 0)
+mesh = SubResource("CylinderMesh_rifle")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("2_health")
+max_health = 100.0
+
+[node name="BodyHitbox" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("3_hitbox")
+health_component_path = NodePath("../HealthComponent")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BodyHitbox"]
+position = Vector3(0, 1.0, 0)
+shape = SubResource("CapsuleShape_body_hitbox")
+
+[node name="HeadHitbox" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("3_hitbox")
+health_component_path = NodePath("../HealthComponent")
+is_critical = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HeadHitbox"]
+position = Vector3(0, 1.65, 0)
+shape = SubResource("SphereShape_head_hitbox")

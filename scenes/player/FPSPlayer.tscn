@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/fps_player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/player/input_settings.gd" id="2_input"]
 [ext_resource type="Script" path="res://scripts/player/weapon_raycast.gd" id="3_weapon"]
+[ext_resource type="Script" path="res://scripts/combat/health_component.gd" id="4_health"]
+[ext_resource type="Script" path="res://scripts/combat/damage_hitbox.gd" id="5_hitbox"]
 
 [sub_resource type="Resource" id="Resource_input"]
 script = ExtResource("2_input")
@@ -17,6 +19,13 @@ height = 1.8
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial_crosshair"]
 albedo_color = Color(0, 1, 0.55, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_body_hitbox"]
+radius = 0.38
+height = 1.45
+
+[sub_resource type="SphereShape3D" id="SphereShape_head_hitbox"]
+radius = 0.24
 
 [node name="FPSPlayer" type="CharacterBody3D"]
 script = ExtResource("1_player")
@@ -37,3 +46,28 @@ fov = 90.0
 script = ExtResource("3_weapon")
 camera_path = NodePath("../Head/Camera3D")
 max_distance = 1000.0
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("4_health")
+max_health = 100.0
+
+[node name="BodyHitbox" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("5_hitbox")
+health_component_path = NodePath("../HealthComponent")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BodyHitbox"]
+position = Vector3(0, 1.0, 0)
+shape = SubResource("CapsuleShape_body_hitbox")
+
+[node name="HeadHitbox" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("5_hitbox")
+health_component_path = NodePath("../HealthComponent")
+is_critical = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HeadHitbox"]
+position = Vector3(0, 1.65, 0)
+shape = SubResource("SphereShape_head_hitbox")
