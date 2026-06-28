@@ -1,44 +1,47 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/entertainment/deathmatch_bot.gd" id="1_bot"]
 [ext_resource type="Script" path="res://scripts/combat/health_component.gd" id="2_health"]
 [ext_resource type="Script" path="res://scripts/combat/damage_hitbox.gd" id="3_hitbox"]
-[ext_resource type="PackedScene" path="res://resources/third_party/kenney_fps_starter/models/enemy-flying.glb" id="4_enemy"]
+[ext_resource type="PackedScene" path="res://resources/third_party/kenney_animated_characters_3/Model/characterMedium.fbx" id="4_enemy"]
+[ext_resource type="Texture2D" path="res://resources/third_party/kenney_animated_characters_3/Skins/zombieMaleA.png" id="5_zombie_skin"]
 [ext_resource type="Texture2D" path="res://resources/third_party/kenney_fps_starter/sprites/burst.png" id="6_burst"]
 [ext_resource type="AudioStream" path="res://resources/third_party/kenney_fps_starter/sounds/enemy_attack.ogg" id="7_attack"]
 [ext_resource type="AudioStream" path="res://resources/third_party/kenney_fps_starter/sounds/enemy_hurt.ogg" id="8_hurt"]
 [ext_resource type="AudioStream" path="res://resources/third_party/kenney_fps_starter/sounds/enemy_destroy.ogg" id="9_destroy"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_body"]
-radius = 0.35
-height = 1.8
+radius = 0.42
+height = 2.05
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_body_hitbox"]
-radius = 0.38
-height = 1.45
+radius = 0.44
+height = 1.62
 
 [sub_resource type="SphereShape3D" id="SphereShape_head_hitbox"]
-radius = 0.26
+radius = 0.32
 
 [node name="DeathmatchBot" type="CharacterBody3D"]
 collision_layer = 1
 collision_mask = 1
 script = ExtResource("1_bot")
+zombie_skin = ExtResource("5_zombie_skin")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-position = Vector3(0, 0.9, 0)
+position = Vector3(0, 1.025, 0)
 shape = SubResource("CapsuleShape_body")
 
 [node name="ModelRoot" type="Node3D" parent="."]
-position = Vector3(0, 1.0, 0)
+position = Vector3(0, 0, 0)
 
 [node name="EnemyModel" parent="ModelRoot" instance=ExtResource("4_enemy")]
-position = Vector3(0, -0.15, 0)
-scale = Vector3(1.35, 1.35, 1.35)
+position = Vector3(0, 0, 0)
+rotation = Vector3(0, 3.14159, 0)
+scale = Vector3(0.48, 0.48, 0.48)
 
 [node name="AttackFlash" type="Sprite3D" parent="ModelRoot"]
 visible = false
-position = Vector3(0, 0.1, -0.72)
+position = Vector3(0, 1.25, -0.86)
 texture = ExtResource("6_burst")
 modulate = Color(1, 1, 1, 0)
 billboard = 1
@@ -54,7 +57,7 @@ script = ExtResource("3_hitbox")
 health_component_path = NodePath("../HealthComponent")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BodyHitbox"]
-position = Vector3(0, 1.0, 0)
+position = Vector3(0, 1.08, 0)
 shape = SubResource("CapsuleShape_body_hitbox")
 
 [node name="HeadHitbox" type="Area3D" parent="."]
@@ -65,7 +68,7 @@ health_component_path = NodePath("../HealthComponent")
 is_critical = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HeadHitbox"]
-position = Vector3(0, 1.65, 0)
+position = Vector3(0, 1.88, 0)
 shape = SubResource("SphereShape_head_hitbox")
 
 [node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]

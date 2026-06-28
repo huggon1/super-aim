@@ -28,6 +28,21 @@ This build uses project-authored gameplay code plus imported CC0 game assets for
   - `sounds/enemy_destroy.ogg`
   - `sounds/enemy_hurt.ogg`
 
+### Kenney Animated Characters 3
+
+- Source: https://opengameart.org/content/animated-characters-3
+- Download date: 2026-06-28
+- License in package: Creative Commons Zero, CC0
+- License URL: https://creativecommons.org/publicdomain/zero/1.0/
+- Imported files:
+  - `Model/characterMedium.fbx`
+  - `Animations/idle.fbx`
+  - `Animations/run.fbx`
+  - `Animations/jump.fbx`
+  - `Skins/zombieMaleA.png`
+  - `Skins/zombieFemaleA.png`
+  - `Preview.png`
+
 Approved CC0 replacement sources for later mesh/audio swaps:
 
 - Quaternius Sci-Fi Essentials Kit: https://quaternius.com/packs/scifiessentialskit.html

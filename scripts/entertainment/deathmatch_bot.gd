@@ -11,6 +11,7 @@ signal killed(bot: DeathmatchBot, source: Node)
 @export var attack_interval := 0.95
 @export var attack_damage := 13.0
 @export var reaction_time := 0.35
+@export var zombie_skin: Texture2D
 
 @onready var health: HealthComponent = $HealthComponent
 @onready var model_root: Node3D = $ModelRoot
@@ -29,13 +30,22 @@ var _last_seen_position := Vector3.ZERO
 var _state := "idle"
 var _combat_suppressed_until_msec := 0
 var _is_active := true
+var _model_initial_scale := Vector3.ONE
+var _model_initial_rotation := Vector3.ZERO
+var _model_initial_position := Vector3.ZERO
+var _visual_time := 0.0
+var _attack_animation_time := 0.0
 
 
 func _ready() -> void:
 	_spawn_position = global_position
+	_model_initial_scale = model_root.scale
+	_model_initial_rotation = model_root.rotation_degrees
+	_model_initial_position = model_root.position
 	health.died.connect(_on_died)
 	health.damaged.connect(_on_damaged)
 	attack_flash.visible = false
+	_apply_zombie_skin()
 
 
 func _physics_process(delta: float) -> void:
@@ -45,6 +55,7 @@ func _physics_process(delta: float) -> void:
 	_attack_cooldown = maxf(0.0, _attack_cooldown - delta)
 	if not health.is_alive:
 		velocity = Vector3.ZERO
+		_update_visual_animation(delta)
 		return
 
 	if target != null and _can_see_target():
@@ -56,14 +67,17 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		if _seen_timer >= reaction_time and _can_attack_now():
 			_try_melee_attack()
+		_update_visual_animation(delta)
 		return
 
 	_seen_timer = 0.0
 	if _last_seen_position != Vector3.ZERO and global_position.distance_to(_last_seen_position) > 1.2:
 		_move_to_last_seen()
+		_update_visual_animation(delta)
 		return
 
 	_patrol(delta)
+	_update_visual_animation(delta)
 
 
 func respawn(at_position: Vector3) -> void:
@@ -71,12 +85,14 @@ func respawn(at_position: Vector3) -> void:
 	_spawn_position = at_position
 	visible = true
 	_is_active = true
-	model_root.scale = Vector3.ONE
-	model_root.rotation_degrees = Vector3.ZERO
+	model_root.scale = _model_initial_scale
+	model_root.rotation_degrees = _model_initial_rotation
+	model_root.position = _model_initial_position
 	set_physics_process(true)
 	health.reset()
 	_seen_timer = 0.0
 	_last_seen_position = Vector3.ZERO
+	_attack_animation_time = 0.0
 	_set_state("idle")
 
 
@@ -226,20 +242,42 @@ func _set_state(next_state: String) -> void:
 		return
 
 	_state = next_state
+
+
+func _update_visual_animation(delta: float) -> void:
+	if _state == "death":
+		return
+
+	_visual_time += delta
+	_attack_animation_time = maxf(0.0, _attack_animation_time - delta)
+
+	var target_position := _model_initial_position
+	var target_rotation := _model_initial_rotation
+	var speed_amount := clampf(velocity.length() / maxf(chase_speed, 0.01), 0.0, 1.0)
+
 	if _state == "idle":
-		model_root.rotation_degrees = Vector3.ZERO
-	elif _state == "run":
-		model_root.rotation_degrees.z = 5.0
-	elif _state == "chase":
-		model_root.rotation_degrees.x = -7.0
-		model_root.rotation_degrees.z = 3.0
-	elif _state == "attack":
-		model_root.rotation_degrees.x = -18.0
-		model_root.rotation_degrees.z = 0.0
+		target_position.y += sin(_visual_time * 2.4) * 0.025
+		target_rotation.x += sin(_visual_time * 1.7) * 1.5
+	elif _state == "run" or _state == "chase":
+		var stride := _visual_time * lerpf(7.5, 10.5, speed_amount)
+		target_position.y += absf(sin(stride)) * 0.11
+		target_rotation.x += lerpf(-4.0, -10.0, speed_amount)
+		target_rotation.z += sin(stride) * lerpf(5.0, 9.0, speed_amount)
+
+	if _attack_animation_time > 0.0:
+		var attack_progress := 1.0 - (_attack_animation_time / 0.22)
+		var pulse := sin(clampf(attack_progress, 0.0, 1.0) * PI)
+		target_position.z -= 0.32 * pulse
+		target_rotation.x -= 18.0 * pulse
+
+	var blend := 1.0 - pow(0.001, delta)
+	model_root.position = model_root.position.lerp(target_position, blend)
+	model_root.rotation_degrees = model_root.rotation_degrees.lerp(target_rotation, blend)
 
 
 func _play_attack_feedback() -> void:
 	_set_state("attack")
+	_attack_animation_time = 0.22
 	attack_flash.visible = true
 	attack_flash.modulate.a = 1.0
 	attack_flash.rotation_degrees.z = randf_range(-30.0, 30.0)
@@ -248,8 +286,6 @@ func _play_attack_feedback() -> void:
 	var tween := create_tween()
 	tween.tween_property(attack_flash, "modulate:a", 0.0, 0.08)
 	tween.tween_callback(func() -> void: attack_flash.visible = false)
-	tween.parallel().tween_property(model_root, "rotation_degrees:x", -18.0, 0.06)
-	tween.tween_property(model_root, "rotation_degrees:x", -7.0, 0.12)
 
 
 func _on_damaged(_amount: float, _source: Node) -> void:
@@ -262,6 +298,23 @@ func _on_died(source: Node) -> void:
 	set_physics_process(false)
 	var tween := create_tween()
 	tween.tween_property(model_root, "rotation_degrees:z", 90.0, 0.18)
-	tween.parallel().tween_property(model_root, "scale", Vector3.ONE * 0.35, 0.18)
+	tween.parallel().tween_property(model_root, "scale", _model_initial_scale * 0.35, 0.18)
 	tween.tween_callback(deactivate)
 	killed.emit(self, source)
+
+
+func _apply_zombie_skin() -> void:
+	if zombie_skin == null:
+		return
+	_apply_zombie_skin_to_node(model_root)
+
+
+func _apply_zombie_skin_to_node(node: Node) -> void:
+	if node is MeshInstance3D:
+		var material := StandardMaterial3D.new()
+		material.albedo_texture = zombie_skin
+		material.roughness = 0.75
+		node.material_override = material
+
+	for child in node.get_children():
+		_apply_zombie_skin_to_node(child)
